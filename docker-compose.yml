@@ -1,0 +1,47 @@
+version: "3"
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    volumes:
+      # this is where your vaultwarden files are stored locally
+      - ./vw-data:/data # change vw-data to any path you desire
+    ports:
+      # 127.0.0.1:58008 is where your nginx proxy should point to
+      - "127.0.0.1:58008:80"
+    environment:
+      # all available variables can be found here:
+      #  https://github.com/dani-garcia/vaultwarden/blob/main/.env.template
+      # set domain this is running under
+      - DOMAIN=https://change.me.or.stuff.wont.work.properly
+      # set the smtp variables or else emails won't be sent
+      - SMTP_HOST=change.me.too
+      - SMTP_FROM=vaultwarden@change.me.too
+      - SMTP_FROM_NAME=Vaultwarden
+      - SMTP_SECURITY=starttls
+      - SMTP_PORT=25
+      - SMTP_USERNAME=CHANGEME
+      - SMTP_PASSWORD=CHANGEME
+      - SMTP_AUTH_MECHANISM="Plain"
+      - SMTP_EMBED_IMAGES=false
+      # enable admin page?
+      # hashed password format can be found here (plain works but generates a warning):
+      #  https://github.com/P-H-C/phc-string-format/blob/master/phc-sf-spec.md
+      # - ADMIN_TOKEN='$argon...'
+      # disallow new signups
+      - SIGNUPS_ALLOWED=false
+      # - SIGNUPS_VERIFY=true
+      # allow invitations?
+      - INVITATIONS_ALLOWED=true
+      # disable push notifications
+      - PUSH_ENABLED=false
+      # or enable and set the following variables
+      - PUSH_INSTALLATION_ID=CHANGEME
+      - PUSH_INSTALLATION_KEY=CHANGEME
+      # you might want to create your own push relay and change this
+      - PUSH_RELAY_URI=https://push.bitwarden.com
+      # emergency access?
+      - EMERGENCY_ACCESS_ALLOWED=true
+      # allow email changes?
+      - EMAIL_CHANGE_ALLOWED=true
